@@ -54,7 +54,7 @@
 static size_t const stackLimit_g =
     JSONCPP_DEPRECATED_STACK_LIMIT; // see readValue()
 
-namespace Json {
+namespace dgJson {
 
 #if __cplusplus >= 201103L || (defined(_CPPLIB_VER) && _CPPLIB_VER >= 520)
 typedef std::unique_ptr<CharReader> CharReaderPtr;
@@ -1952,11 +1952,11 @@ static void getValidReaderKeys(std::set<JSONCPP_STRING>* valid_keys) {
   valid_keys->insert("rejectDupKeys");
   valid_keys->insert("allowSpecialFloats");
 }
-bool CharReaderBuilder::validate(Json::Value* invalid) const {
-  Json::Value my_invalid;
+bool CharReaderBuilder::validate(dgJson::Value* invalid) const {
+  dgJson::Value my_invalid;
   if (!invalid)
     invalid = &my_invalid; // so we do not need to test for NULL
-  Json::Value& inv = *invalid;
+  dgJson::Value& inv = *invalid;
   std::set<JSONCPP_STRING> valid_keys;
   getValidReaderKeys(&valid_keys);
   Value::Members keys = settings_.getMemberNames();
@@ -1973,7 +1973,7 @@ Value& CharReaderBuilder::operator[](JSONCPP_STRING key) {
   return settings_[key];
 }
 // static
-void CharReaderBuilder::strictMode(Json::Value* settings) {
+void CharReaderBuilder::strictMode(dgJson::Value* settings) {
   //! [CharReaderBuilderStrictMode]
   (*settings)["allowComments"] = false;
   (*settings)["strictRoot"] = true;
@@ -1987,7 +1987,7 @@ void CharReaderBuilder::strictMode(Json::Value* settings) {
   //! [CharReaderBuilderStrictMode]
 }
 // static
-void CharReaderBuilder::setDefaults(Json::Value* settings) {
+void CharReaderBuilder::setDefaults(dgJson::Value* settings) {
   //! [CharReaderBuilderDefaults]
   (*settings)["collectComments"] = true;
   (*settings)["allowComments"] = true;

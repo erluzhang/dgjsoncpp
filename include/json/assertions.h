@@ -23,7 +23,7 @@
 #define JSON_ASSERT(condition)                                                 \
   {                                                                            \
     if (!(condition)) {                                                        \
-      Json::throwLogicError("assert json failed");                             \
+      dgJson::throwLogicError("assert json failed");                             \
     }                                                                          \
   }
 
@@ -31,7 +31,7 @@
   {                                                                            \
     JSONCPP_OSTRINGSTREAM oss;                                                 \
     oss << message;                                                            \
-    Json::throwLogicError(oss.str());                                          \
+    dgJson::throwLogicError(oss.str());                                          \
     abort();                                                                   \
   }
 

@@ -116,8 +116,8 @@ When a test is run, output files are generated beside the input test files. Belo
 * `test_complex_01.actual`: flattened JSON element tree produced by `jsontest`
   from reading `test_complex_01.json`.
 * `test_complex_01.rewrite`: JSON document written by `jsontest` using the
-  `Json::Value` parsed from `test_complex_01.json` and serialized using
-  `Json::StyledWritter`.
+  `dgJson::Value` parsed from `test_complex_01.json` and serialized using
+  `dgJson::StyledWritter`.
 * `test_complex_01.actual-rewrite`: flattened JSON element tree produced by
   `jsontest` from reading `test_complex_01.rewrite`.
 * `test_complex_01.process-output`: `jsontest` output, typically useful for

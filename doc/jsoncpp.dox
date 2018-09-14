@@ -50,7 +50,7 @@ preserved.
 \section _example Code example
 
 \code
-Json::Value root;   // 'root' will contain the root value after parsing.
+dgJson::Value root;   // 'root' will contain the root value after parsing.
 std::cin >> root;
 
 // You can also read into a particular sub-value.
@@ -62,7 +62,7 @@ std::string encoding = root.get("encoding", "UTF-8" ).asString();
 
 // Get the value of the member of root named 'plug-ins'; return a 'null' value if
 // there is no such member.
-const Json::Value plugins = root["plug-ins"];
+const dgJson::Value plugins = root["plug-ins"];
 
 // Iterate over the sequence elements.
 for ( int index = 0; index < plugins.size(); ++index )
@@ -72,8 +72,8 @@ for ( int index = 0; index < plugins.size(); ++index )
 foo::setIndentLength( root["indent"].get("length", 3).asInt() );
 foo::setIndentUseSpace( root["indent"].get("use_space", true).asBool() );
 
-// Since Json::Value has an implicit constructor for all value types, it is not
-// necessary to explicitly construct the Json::Value object.
+// Since dgJson::Value has an implicit constructor for all value types, it is not
+// necessary to explicitly construct the dgJson::Value object.
 root["encoding"] = foo::getCurrentEncoding();
 root["indent"]["length"] = foo::getCurrentIndentLength();
 root["indent"]["use_space"] = foo::getCurrentIndentUseSpace();
@@ -89,34 +89,34 @@ std::cout << std::endl;
 \section _advanced Advanced usage
 
 Configure *builders* to create *readers* and *writers*. For
-configuration, we use our own `Json::Value` (rather than
+configuration, we use our own `dgJson::Value` (rather than
 standard setters/getters) so that we can add
 features without losing binary-compatibility.
 
 \code
 // For convenience, use `writeString()` with a specialized builder.
-Json::StreamWriterBuilder wbuilder;
+dgJson::StreamWriterBuilder wbuilder;
 wbuilder["indentation"] = "\t";
-std::string document = Json::writeString(wbuilder, root);
+std::string document = dgJson::writeString(wbuilder, root);
 
 // Here, using a specialized Builder, we discard comments and
 // record errors as we parse.
-Json::CharReaderBuilder rbuilder;
+dgJson::CharReaderBuilder rbuilder;
 rbuilder["collectComments"] = false;
 std::string errs;
-bool ok = Json::parseFromStream(rbuilder, std::cin, &root, &errs);
+bool ok = dgJson::parseFromStream(rbuilder, std::cin, &root, &errs);
 \endcode
 
 Yes, compile-time configuration-checking would be helpful,
-but `Json::Value` lets you
+but `dgJson::Value` lets you
 write and read the builder configuration, which is better! In other words,
 you can configure your JSON parser using JSON.
 
 CharReaders and StreamWriters are not thread-safe, but they are re-usable.
 \code
-Json::CharReaderBuilder rbuilder;
+dgJson::CharReaderBuilder rbuilder;
 cfg >> rbuilder.settings_;
-std::unique_ptr<Json::CharReader> const reader(rbuilder.newCharReader());
+std::unique_ptr<dgJson::CharReader> const reader(rbuilder.newCharReader());
 reader->parse(start, stop, &value1, &errs);
 // ...
 reader->parse(start, stop, &value2, &errs);

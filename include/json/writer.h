@@ -22,7 +22,7 @@
 
 #pragma pack(push, 8)
 
-namespace Json {
+namespace dgJson {
 
 class Value;
 
@@ -75,12 +75,12 @@ JSONCPP_STRING JSON_API writeString(StreamWriter::Factory const& factory,
 
 Usage:
 \code
-  using namespace Json;
+  using namespace dgJson;
   Value value = ...;
   StreamWriterBuilder builder;
   builder["commentStyle"] = "None";
   builder["indentation"] = "   ";  // or whatever you like
-  std::unique_ptr<Json::StreamWriter> writer(
+  std::unique_ptr<dgJson::StreamWriter> writer(
       builder.newStreamWriter());
   writer->write(value, &std::cout);
   std::cout << std::endl;  // add lf and flush
@@ -88,7 +88,7 @@ Usage:
 */
 class JSON_API StreamWriterBuilder : public StreamWriter::Factory {
 public:
-  // Note: We use a Json::Value so that we can add data-members to this class
+  // Note: We use a dgJson::Value so that we can add data-members to this class
   // without a major version bump.
   /** Configuration of this builder.
     Available settings (case-sensitive):
@@ -116,7 +116,7 @@ public:
     JSON Value.
     \sa setDefaults()
     */
-  Json::Value settings_;
+  dgJson::Value settings_;
 
   StreamWriterBuilder();
   ~StreamWriterBuilder() JSONCPP_OVERRIDE;
@@ -129,17 +129,17 @@ public:
   /** \return true if 'settings' are legal and consistent;
    *   otherwise, indicate bad settings via 'invalid'.
    */
-  bool validate(Json::Value* invalid) const;
+  bool validate(dgJson::Value* invalid) const;
   /** A simple way to update a specific setting.
    */
   Value& operator[](JSONCPP_STRING key);
 
   /** Called by ctor, but you can use this to reset settings_.
-   * \pre 'settings' != NULL (but Json::null is fine)
+   * \pre 'settings' != NULL (but dgJson::null is fine)
    * \remark Defaults:
    * \snippet src/lib_json/json_writer.cpp StreamWriterBuilderDefaults
    */
-  static void setDefaults(Json::Value* settings);
+  static void setDefaults(dgJson::Value* settings);
 };
 
 /** \brief Abstract class for writers.
@@ -354,7 +354,7 @@ JSONCPP_STRING JSON_API valueToString(bool value);
 JSONCPP_STRING JSON_API valueToQuotedString(const char* value);
 
 /// \brief Output using the StyledStreamWriter.
-/// \see Json::operator>>()
+/// \see dgJson::operator>>()
 JSON_API JSONCPP_OSTREAM& operator<<(JSONCPP_OSTREAM&, const Value& root);
 
 } // namespace Json

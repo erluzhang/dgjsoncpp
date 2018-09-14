@@ -25,7 +25,7 @@
  * It is an internal header that must not be exposed.
  */
 
-namespace Json {
+namespace dgJson {
 static inline char getDecimalPoint() {
 #ifdef JSONCPP_NO_LOCALE_SUPPORT
   return '\0';

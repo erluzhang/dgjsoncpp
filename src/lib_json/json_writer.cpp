@@ -82,7 +82,7 @@
 #pragma warning(disable : 4996)
 #endif
 
-namespace Json {
+namespace dgJson {
 
 #if __cplusplus >= 201103L || (defined(_CPPLIB_VER) && _CPPLIB_VER >= 520)
 typedef std::unique_ptr<StreamWriter> StreamWriterPtr;
@@ -1212,11 +1212,11 @@ static void getValidWriterKeys(std::set<JSONCPP_STRING>* valid_keys) {
   valid_keys->insert("precision");
   valid_keys->insert("precisionType");
 }
-bool StreamWriterBuilder::validate(Json::Value* invalid) const {
-  Json::Value my_invalid;
+bool StreamWriterBuilder::validate(dgJson::Value* invalid) const {
+  dgJson::Value my_invalid;
   if (!invalid)
     invalid = &my_invalid; // so we do not need to test for NULL
-  Json::Value& inv = *invalid;
+  dgJson::Value& inv = *invalid;
   std::set<JSONCPP_STRING> valid_keys;
   getValidWriterKeys(&valid_keys);
   Value::Members keys = settings_.getMemberNames();
@@ -1233,7 +1233,7 @@ Value& StreamWriterBuilder::operator[](JSONCPP_STRING key) {
   return settings_[key];
 }
 // static
-void StreamWriterBuilder::setDefaults(Json::Value* settings) {
+void StreamWriterBuilder::setDefaults(dgJson::Value* settings) {
   //! [StreamWriterBuilderDefaults]
   (*settings)["commentStyle"] = "All";
   (*settings)["indentation"] = "\t";

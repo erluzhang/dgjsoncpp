@@ -25,7 +25,7 @@
 
 #pragma pack(push, 8)
 
-namespace Json {
+namespace dgJson {
 
 /** \brief Unserialize a <a HREF="http://www.json.org">JSON</a> document into a
  *Value.
@@ -102,7 +102,7 @@ public:
              bool collectComments = true);
 
   /// \brief Parse from input stream.
-  /// \see Json::operator>>(std::istream&, Json::Value&).
+  /// \see dgJson::operator>>(std::istream&, dgJson::Value&).
   bool parse(JSONCPP_ISTREAM& is, Value& root, bool collectComments = true);
 
   /** \brief Returns a user friendly string that list errors in the parsed
@@ -294,7 +294,7 @@ public:
 
 Usage:
 \code
-  using namespace Json;
+  using namespace dgJson;
   CharReaderBuilder builder;
   builder["collectComments"] = false;
   Value value;
@@ -304,7 +304,7 @@ Usage:
 */
 class JSON_API CharReaderBuilder : public CharReader::Factory {
 public:
-  // Note: We use a Json::Value so that we can add data-members to this class
+  // Note: We use a dgJson::Value so that we can add data-members to this class
   // without a major version bump.
   /** Configuration of this builder.
     These are case-sensitive.
@@ -344,7 +344,7 @@ public:
     JSON Value.
     \sa setDefaults()
     */
-  Json::Value settings_;
+  dgJson::Value settings_;
 
   CharReaderBuilder();
   ~CharReaderBuilder() JSONCPP_OVERRIDE;
@@ -354,24 +354,24 @@ public:
   /** \return true if 'settings' are legal and consistent;
    *   otherwise, indicate bad settings via 'invalid'.
    */
-  bool validate(Json::Value* invalid) const;
+  bool validate(dgJson::Value* invalid) const;
 
   /** A simple way to update a specific setting.
    */
   Value& operator[](JSONCPP_STRING key);
 
   /** Called by ctor, but you can use this to reset settings_.
-   * \pre 'settings' != NULL (but Json::null is fine)
+   * \pre 'settings' != NULL (but dgJson::null is fine)
    * \remark Defaults:
    * \snippet src/lib_json/json_reader.cpp CharReaderBuilderDefaults
    */
-  static void setDefaults(Json::Value* settings);
+  static void setDefaults(dgJson::Value* settings);
   /** Same as old Features::strictMode().
-   * \pre 'settings' != NULL (but Json::null is fine)
+   * \pre 'settings' != NULL (but dgJson::null is fine)
    * \remark Defaults:
    * \snippet src/lib_json/json_reader.cpp CharReaderBuilderStrictMode
    */
-  static void strictMode(Json::Value* settings);
+  static void strictMode(dgJson::Value* settings);
 };
 
 /** Consume entire stream and use its begin/end.
@@ -390,7 +390,7 @@ bool JSON_API parseFromStream(CharReader::Factory const&,
  This can be used to read a file into a particular sub-object.
  For example:
  \code
- Json::Value root;
+ dgJson::Value root;
  cin >> root["dir"]["file"];
  cout << root;
  \endcode
@@ -405,7 +405,7 @@ bool JSON_API parseFromStream(CharReader::Factory const&,
  }
  \endverbatim
  \throw std::exception on parse error.
- \see Json::operator<<()
+ \see dgJson::operator<<()
 */
 JSON_API JSONCPP_ISTREAM& operator>>(JSONCPP_ISTREAM&, Value&);
 

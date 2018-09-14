@@ -26,7 +26,7 @@
 
 #define JSON_ASSERT_UNREACHABLE assert(false)
 
-namespace Json {
+namespace dgJson {
 
 // This is a walkaround to avoid the static initialization of Value::null.
 // kNull must be word-aligned to avoid crashing on ARM.  We use an alignment of
@@ -79,7 +79,7 @@ static inline bool InRange(double d, T min, U max) {
   return d >= min && d <= max;
 }
 #else  // if !defined(JSON_USE_INT64_DOUBLE_CONVERSION)
-static inline double integerToDouble(Json::UInt64 value) {
+static inline double integerToDouble(dgJson::UInt64 value) {
   return static_cast<double>(Int64(value / 2)) * 2.0 +
          static_cast<double>(Int64(value & 1));
 }
@@ -109,7 +109,7 @@ static inline char* duplicateStringValue(const char* value, size_t length) {
 
   char* newString = static_cast<char*>(malloc(length + 1));
   if (newString == NULL) {
-    throwRuntimeError("in Json::Value::duplicateStringValue(): "
+    throwRuntimeError("in dgJson::Value::duplicateStringValue(): "
                       "Failed to allocate string value buffer");
   }
   memcpy(newString, value, length);
@@ -125,12 +125,12 @@ static inline char* duplicateAndPrefixStringValue(const char* value,
   // to a sane value.
   JSON_ASSERT_MESSAGE(length <= static_cast<unsigned>(Value::maxInt) -
                                     sizeof(unsigned) - 1U,
-                      "in Json::Value::duplicateAndPrefixStringValue(): "
+                      "in dgJson::Value::duplicateAndPrefixStringValue(): "
                       "length too big for prefixing");
   unsigned actualLength = length + static_cast<unsigned>(sizeof(unsigned)) + 1U;
   char* newString = static_cast<char*>(malloc(actualLength));
   if (newString == 0) {
-    throwRuntimeError("in Json::Value::duplicateAndPrefixStringValue(): "
+    throwRuntimeError("in dgJson::Value::duplicateAndPrefixStringValue(): "
                       "Failed to allocate string value buffer");
   }
   *reinterpret_cast<unsigned*>(newString) = length;
@@ -188,7 +188,7 @@ static inline void releaseStringValue(char* value, unsigned) { free(value); }
 #include "json_valueiterator.inl"
 #endif // if !defined(JSON_IS_AMALGAMATION)
 
-namespace Json {
+namespace dgJson {
 
 Exception::Exception(JSONCPP_STRING const& msg) : msg_(msg) {}
 Exception::~Exception() JSONCPP_NOEXCEPT {}
@@ -225,7 +225,7 @@ void Value::CommentInfo::setComment(const char* text, size_t len) {
   JSON_ASSERT(text != 0);
   JSON_ASSERT_MESSAGE(
       text[0] == '\0' || text[0] == '/',
-      "in Json::Value::setComment(): Comments must start with /");
+      "in dgJson::Value::setComment(): Comments must start with /");
   // It seems that /**/ style comments are acceptable as well.
   comment_ = duplicateStringValue(text, len);
 }
@@ -573,7 +573,7 @@ bool Value::operator>(const Value& other) const { return other < *this; }
 bool Value::operator==(const Value& other) const {
   // if ( type_ != other.type_ )
   // GCC 2.95.3 says:
-  // attempt to take address of bit-field structure member `Json::Value::type_'
+  // attempt to take address of bit-field structure member `dgJson::Value::type_'
   // Beats me, but a temp solves the problem.
   int temp = other.type_;
   if (type_ != temp)
@@ -621,7 +621,7 @@ bool Value::operator!=(const Value& other) const { return !(*this == other); }
 
 const char* Value::asCString() const {
   JSON_ASSERT_MESSAGE(type_ == stringValue,
-                      "in Json::Value::asCString(): requires stringValue");
+                      "in dgJson::Value::asCString(): requires stringValue");
   if (value_.string_ == 0)
     return 0;
   unsigned this_len;
@@ -634,7 +634,7 @@ const char* Value::asCString() const {
 #if JSONCPP_USING_SECURE_MEMORY
 unsigned Value::getCStringLength() const {
   JSON_ASSERT_MESSAGE(type_ == stringValue,
-                      "in Json::Value::asCString(): requires stringValue");
+                      "in dgJson::Value::asCString(): requires stringValue");
   if (value_.string_ == 0)
     return 0;
   unsigned this_len;
@@ -929,7 +929,7 @@ Value::operator bool() const { return !isNull(); }
 void Value::clear() {
   JSON_ASSERT_MESSAGE(type_ == nullValue || type_ == arrayValue ||
                           type_ == objectValue,
-                      "in Json::Value::clear(): requires complex value");
+                      "in dgJson::Value::clear(): requires complex value");
   start_ = 0;
   limit_ = 0;
   switch (type_) {
@@ -944,7 +944,7 @@ void Value::clear() {
 
 void Value::resize(ArrayIndex newSize) {
   JSON_ASSERT_MESSAGE(type_ == nullValue || type_ == arrayValue,
-                      "in Json::Value::resize(): requires arrayValue");
+                      "in dgJson::Value::resize(): requires arrayValue");
   if (type_ == nullValue)
     *this = Value(arrayValue);
   ArrayIndex oldSize = size();
@@ -963,7 +963,7 @@ void Value::resize(ArrayIndex newSize) {
 Value& Value::operator[](ArrayIndex index) {
   JSON_ASSERT_MESSAGE(
       type_ == nullValue || type_ == arrayValue,
-      "in Json::Value::operator[](ArrayIndex): requires arrayValue");
+      "in dgJson::Value::operator[](ArrayIndex): requires arrayValue");
   if (type_ == nullValue)
     *this = Value(arrayValue);
   CZString key(index);
@@ -979,14 +979,14 @@ Value& Value::operator[](ArrayIndex index) {
 Value& Value::operator[](int index) {
   JSON_ASSERT_MESSAGE(
       index >= 0,
-      "in Json::Value::operator[](int index): index cannot be negative");
+      "in dgJson::Value::operator[](int index): index cannot be negative");
   return (*this)[ArrayIndex(index)];
 }
 
 const Value& Value::operator[](ArrayIndex index) const {
   JSON_ASSERT_MESSAGE(
       type_ == nullValue || type_ == arrayValue,
-      "in Json::Value::operator[](ArrayIndex)const: requires arrayValue");
+      "in dgJson::Value::operator[](ArrayIndex)const: requires arrayValue");
   if (type_ == nullValue)
     return nullSingleton();
   CZString key(index);
@@ -999,7 +999,7 @@ const Value& Value::operator[](ArrayIndex index) const {
 const Value& Value::operator[](int index) const {
   JSON_ASSERT_MESSAGE(
       index >= 0,
-      "in Json::Value::operator[](int index) const: index cannot be negative");
+      "in dgJson::Value::operator[](int index) const: index cannot be negative");
   return (*this)[ArrayIndex(index)];
 }
 
@@ -1085,7 +1085,7 @@ void Value::dupMeta(const Value& other) {
 Value& Value::resolveReference(const char* key) {
   JSON_ASSERT_MESSAGE(
       type_ == nullValue || type_ == objectValue,
-      "in Json::Value::resolveReference(): requires objectValue");
+      "in dgJson::Value::resolveReference(): requires objectValue");
   if (type_ == nullValue)
     *this = Value(objectValue);
   CZString actualKey(key, static_cast<unsigned>(strlen(key)),
@@ -1104,7 +1104,7 @@ Value& Value::resolveReference(const char* key) {
 Value& Value::resolveReference(char const* key, char const* end) {
   JSON_ASSERT_MESSAGE(
       type_ == nullValue || type_ == objectValue,
-      "in Json::Value::resolveReference(key, end): requires objectValue");
+      "in dgJson::Value::resolveReference(key, end): requires objectValue");
   if (type_ == nullValue)
     *this = Value(objectValue);
   CZString actualKey(key, static_cast<unsigned>(end - key),
@@ -1128,7 +1128,7 @@ bool Value::isValidIndex(ArrayIndex index) const { return index < size(); }
 
 Value const* Value::find(char const* begin, char const* end) const {
   JSON_ASSERT_MESSAGE(type_ == nullValue || type_ == objectValue,
-                      "in Json::Value::find(key, end, found): requires "
+                      "in dgJson::Value::find(key, end, found): requires "
                       "objectValue or nullValue");
   if (type_ == nullValue)
     return NULL;
@@ -1223,7 +1223,7 @@ bool Value::removeMember(JSONCPP_STRING const& key, Value* removed) {
 }
 void Value::removeMember(const char* key) {
   JSON_ASSERT_MESSAGE(type_ == nullValue || type_ == objectValue,
-                      "in Json::Value::removeMember(): requires objectValue");
+                      "in dgJson::Value::removeMember(): requires objectValue");
   if (type_ == nullValue)
     return;
 
@@ -1285,7 +1285,7 @@ bool Value::isMember(const CppTL::ConstString& key) const {
 Value::Members Value::getMemberNames() const {
   JSON_ASSERT_MESSAGE(
       type_ == nullValue || type_ == objectValue,
-      "in Json::Value::getMemberNames(), value must be objectValue");
+      "in dgJson::Value::getMemberNames(), value must be objectValue");
   if (type_ == nullValue)
     return Value::Members();
   Members members;
@@ -1491,7 +1491,7 @@ JSONCPP_STRING Value::toStyledString() const {
   StreamWriterBuilder builder;
 
   JSONCPP_STRING out = this->hasComment(commentBefore) ? "\n" : "";
-  out += Json::writeString(builder, *this);
+  out += dgJson::writeString(builder, *this);
   out += '\n';
 
   return out;

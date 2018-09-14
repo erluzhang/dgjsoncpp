@@ -92,8 +92,8 @@ public:
   // Specialized versions.
   TestResult& operator<<(bool value);
   // std:ostream does not support 64bits integers on all STL implementation
-  TestResult& operator<<(Json::Int64 value);
-  TestResult& operator<<(Json::UInt64 value);
+  TestResult& operator<<(dgJson::Int64 value);
+  TestResult& operator<<(dgJson::UInt64 value);
 
 private:
   TestResult& addToLastFailure(const JSONCPP_STRING& message);

@@ -11,7 +11,7 @@
 
 #pragma pack(push, 8)
 
-namespace Json {
+namespace dgJson {
 template <typename T> class SecureAllocator {
 public:
   // Type definitions

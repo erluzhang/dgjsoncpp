@@ -192,12 +192,12 @@ TestResult& TestResult::addToLastFailure(const JSONCPP_STRING& message) {
   return *this;
 }
 
-TestResult& TestResult::operator<<(Json::Int64 value) {
-  return addToLastFailure(Json::valueToString(value));
+TestResult& TestResult::operator<<(dgJson::Int64 value) {
+  return addToLastFailure(dgJson::valueToString(value));
 }
 
-TestResult& TestResult::operator<<(Json::UInt64 value) {
-  return addToLastFailure(Json::valueToString(value));
+TestResult& TestResult::operator<<(dgJson::UInt64 value) {
+  return addToLastFailure(dgJson::valueToString(value));
 }
 
 TestResult& TestResult::operator<<(bool value) {

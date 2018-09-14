@@ -20,9 +20,9 @@
 
 struct Options {
   JSONCPP_STRING path;
-  Json::Features features;
+  dgJson::Features features;
   bool parseOnly;
-  typedef JSONCPP_STRING (*writeFuncType)(Json::Value const&);
+  typedef JSONCPP_STRING (*writeFuncType)(dgJson::Value const&);
   writeFuncType write;
 };
 
@@ -73,37 +73,37 @@ static JSONCPP_STRING readInputTestFile(const char* path) {
 }
 
 static void printValueTree(FILE* fout,
-                           Json::Value& value,
+                           dgJson::Value& value,
                            const JSONCPP_STRING& path = ".") {
-  if (value.hasComment(Json::commentBefore)) {
-    fprintf(fout, "%s\n", value.getComment(Json::commentBefore).c_str());
+  if (value.hasComment(dgJson::commentBefore)) {
+    fprintf(fout, "%s\n", value.getComment(dgJson::commentBefore).c_str());
   }
   switch (value.type()) {
-  case Json::nullValue:
+  case dgJson::nullValue:
     fprintf(fout, "%s=null\n", path.c_str());
     break;
-  case Json::intValue:
+  case dgJson::intValue:
     fprintf(fout, "%s=%s\n", path.c_str(),
-            Json::valueToString(value.asLargestInt()).c_str());
+            dgJson::valueToString(value.asLargestInt()).c_str());
     break;
-  case Json::uintValue:
+  case dgJson::uintValue:
     fprintf(fout, "%s=%s\n", path.c_str(),
-            Json::valueToString(value.asLargestUInt()).c_str());
+            dgJson::valueToString(value.asLargestUInt()).c_str());
     break;
-  case Json::realValue:
+  case dgJson::realValue:
     fprintf(fout, "%s=%s\n", path.c_str(),
             normalizeFloatingPointStr(value.asDouble()).c_str());
     break;
-  case Json::stringValue:
+  case dgJson::stringValue:
     fprintf(fout, "%s=\"%s\"\n", path.c_str(), value.asString().c_str());
     break;
-  case Json::booleanValue:
+  case dgJson::booleanValue:
     fprintf(fout, "%s=%s\n", path.c_str(), value.asBool() ? "true" : "false");
     break;
-  case Json::arrayValue: {
+  case dgJson::arrayValue: {
     fprintf(fout, "%s=[]\n", path.c_str());
-    Json::ArrayIndex size = value.size();
-    for (Json::ArrayIndex index = 0; index < size; ++index) {
+    dgJson::ArrayIndex size = value.size();
+    for (dgJson::ArrayIndex index = 0; index < size; ++index) {
       static char buffer[16];
 #if defined(_MSC_VER) && defined(__STDC_SECURE_LIB__)
       sprintf_s(buffer, sizeof(buffer), "[%u]", index);
@@ -113,12 +113,12 @@ static void printValueTree(FILE* fout,
       printValueTree(fout, value[index], path + buffer);
     }
   } break;
-  case Json::objectValue: {
+  case dgJson::objectValue: {
     fprintf(fout, "%s={}\n", path.c_str());
-    Json::Value::Members members(value.getMemberNames());
+    dgJson::Value::Members members(value.getMemberNames());
     std::sort(members.begin(), members.end());
     JSONCPP_STRING suffix = *(path.end() - 1) == '.' ? "" : ".";
-    for (Json::Value::Members::iterator it = members.begin();
+    for (dgJson::Value::Members::iterator it = members.begin();
          it != members.end(); ++it) {
       const JSONCPP_STRING name = *it;
       printValueTree(fout, value[name], path + suffix + name);
@@ -128,18 +128,18 @@ static void printValueTree(FILE* fout,
     break;
   }
 
-  if (value.hasComment(Json::commentAfter)) {
-    fprintf(fout, "%s\n", value.getComment(Json::commentAfter).c_str());
+  if (value.hasComment(dgJson::commentAfter)) {
+    fprintf(fout, "%s\n", value.getComment(dgJson::commentAfter).c_str());
   }
 }
 
 static int parseAndSaveValueTree(const JSONCPP_STRING& input,
                                  const JSONCPP_STRING& actual,
                                  const JSONCPP_STRING& kind,
-                                 const Json::Features& features,
+                                 const dgJson::Features& features,
                                  bool parseOnly,
-                                 Json::Value* root) {
-  Json::Reader reader(features);
+                                 dgJson::Value* root) {
+  dgJson::Reader reader(features);
   bool parsingSuccessful =
       reader.parse(input.data(), input.data() + input.size(), *root);
   if (!parsingSuccessful) {
@@ -158,27 +158,27 @@ static int parseAndSaveValueTree(const JSONCPP_STRING& input,
   }
   return 0;
 }
-// static JSONCPP_STRING useFastWriter(Json::Value const& root) {
-//   Json::FastWriter writer;
+// static JSONCPP_STRING useFastWriter(dgJson::Value const& root) {
+//   dgJson::FastWriter writer;
 //   writer.enableYAMLCompatibility();
 //   return writer.write(root);
 // }
-static JSONCPP_STRING useStyledWriter(Json::Value const& root) {
-  Json::StyledWriter writer;
+static JSONCPP_STRING useStyledWriter(dgJson::Value const& root) {
+  dgJson::StyledWriter writer;
   return writer.write(root);
 }
-static JSONCPP_STRING useStyledStreamWriter(Json::Value const& root) {
-  Json::StyledStreamWriter writer;
+static JSONCPP_STRING useStyledStreamWriter(dgJson::Value const& root) {
+  dgJson::StyledStreamWriter writer;
   JSONCPP_OSTRINGSTREAM sout;
   writer.write(sout, root);
   return sout.str();
 }
-static JSONCPP_STRING useBuiltStyledStreamWriter(Json::Value const& root) {
-  Json::StreamWriterBuilder builder;
-  return Json::writeString(builder, root);
+static JSONCPP_STRING useBuiltStyledStreamWriter(dgJson::Value const& root) {
+  dgJson::StreamWriterBuilder builder;
+  return dgJson::writeString(builder, root);
 }
 static int rewriteValueTree(const JSONCPP_STRING& rewritePath,
-                            const Json::Value& root,
+                            const dgJson::Value& root,
                             Options::writeFuncType write,
                             JSONCPP_STRING* rewrite) {
   *rewrite = write(root);
@@ -224,7 +224,7 @@ static int parseCommandLine(int argc, const char* argv[], Options* opts) {
   }
   int index = 1;
   if (JSONCPP_STRING(argv[index]) == "--json-checker") {
-    opts->features = Json::Features::strictMode();
+    opts->features = dgJson::Features::strictMode();
     opts->parseOnly = true;
     ++index;
   }
@@ -272,7 +272,7 @@ static int runTest(Options const& opts) {
   JSONCPP_STRING const rewritePath = basePath + ".rewrite";
   JSONCPP_STRING const rewriteActualPath = basePath + ".actual-rewrite";
 
-  Json::Value root;
+  dgJson::Value root;
   exitCode = parseAndSaveValueTree(input, actualPath, "input", opts.features,
                                    opts.parseOnly, &root);
   if (exitCode || opts.parseOnly) {
@@ -283,7 +283,7 @@ static int runTest(Options const& opts) {
   if (exitCode) {
     return exitCode;
   }
-  Json::Value rewriteRoot;
+  dgJson::Value rewriteRoot;
   exitCode = parseAndSaveValueTree(rewrite, rewriteActualPath, "rewrite",
                                    opts.features, opts.parseOnly, &rewriteRoot);
   if (exitCode) {

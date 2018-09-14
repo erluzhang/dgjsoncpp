@@ -12,7 +12,7 @@
 
 #pragma pack(push, 8)
 
-namespace Json {
+namespace dgJson {
 
 /** \brief Configuration passed to reader and writer.
  * This configuration object can be used to force the Reader or Writer

@@ -46,7 +46,7 @@
 
 /** \brief JSON (JavaScript Object Notation).
  */
-namespace Json {
+namespace dgJson {
 
 /** Base class for all exceptions we throw.
  *
@@ -66,7 +66,7 @@ protected:
  *
  * E.g. out-of-memory (when we use malloc), stack-overflow, malicious input
  *
- * \remark derived from Json::Exception
+ * \remark derived from dgJson::Exception
  */
 class JSON_API RuntimeError : public Exception {
 public:
@@ -77,7 +77,7 @@ public:
  *
  * These are precondition-violations (user bugs) and internal errors (our bugs).
  *
- * \remark derived from Json::Exception
+ * \remark derived from dgJson::Exception
  */
 class JSON_API LogicError : public Exception {
 public:
@@ -130,8 +130,8 @@ enum PrecisionType {
  *
  * Example of usage:
  * \code
- * Json::Value aValue( StaticString("some text") );
- * Json::Value object;
+ * dgJson::Value aValue( StaticString("some text") );
+ * dgJson::Value object;
  * static const StaticString code("code");
  * object[code] = 1234;
  * \endcode
@@ -189,15 +189,15 @@ public:
   typedef std::vector<JSONCPP_STRING> Members;
   typedef ValueIterator iterator;
   typedef ValueConstIterator const_iterator;
-  typedef Json::UInt UInt;
-  typedef Json::Int Int;
+  typedef dgJson::UInt UInt;
+  typedef dgJson::Int Int;
 #if defined(JSON_HAS_INT64)
-  typedef Json::UInt64 UInt64;
-  typedef Json::Int64 Int64;
+  typedef dgJson::UInt64 UInt64;
+  typedef dgJson::Int64 Int64;
 #endif // defined(JSON_HAS_INT64)
-  typedef Json::LargestInt LargestInt;
-  typedef Json::LargestUInt LargestUInt;
-  typedef Json::ArrayIndex ArrayIndex;
+  typedef dgJson::LargestInt LargestInt;
+  typedef dgJson::LargestUInt LargestUInt;
+  typedef dgJson::ArrayIndex ArrayIndex;
 
   // Required for boost integration, e. g. BOOST_TEST
   typedef std::string value_type;
@@ -208,26 +208,26 @@ public:
                                ///< as null
   static Value const& nullSingleton(); ///< Prefer this to null or nullRef.
 
-  /// Minimum signed integer value that can be stored in a Json::Value.
+  /// Minimum signed integer value that can be stored in a dgJson::Value.
   static const LargestInt minLargestInt;
-  /// Maximum signed integer value that can be stored in a Json::Value.
+  /// Maximum signed integer value that can be stored in a dgJson::Value.
   static const LargestInt maxLargestInt;
-  /// Maximum unsigned integer value that can be stored in a Json::Value.
+  /// Maximum unsigned integer value that can be stored in a dgJson::Value.
   static const LargestUInt maxLargestUInt;
 
-  /// Minimum signed int value that can be stored in a Json::Value.
+  /// Minimum signed int value that can be stored in a dgJson::Value.
   static const Int minInt;
-  /// Maximum signed int value that can be stored in a Json::Value.
+  /// Maximum signed int value that can be stored in a dgJson::Value.
   static const Int maxInt;
-  /// Maximum unsigned int value that can be stored in a Json::Value.
+  /// Maximum unsigned int value that can be stored in a dgJson::Value.
   static const UInt maxUInt;
 
 #if defined(JSON_HAS_INT64)
-  /// Minimum signed 64 bits int value that can be stored in a Json::Value.
+  /// Minimum signed 64 bits int value that can be stored in a dgJson::Value.
   static const Int64 minInt64;
-  /// Maximum signed 64 bits int value that can be stored in a Json::Value.
+  /// Maximum signed 64 bits int value that can be stored in a dgJson::Value.
   static const Int64 maxInt64;
-  /// Maximum unsigned 64 bits int value that can be stored in a Json::Value.
+  /// Maximum unsigned 64 bits int value that can be stored in a dgJson::Value.
   static const UInt64 maxUInt64;
 #endif // defined(JSON_HAS_INT64)
 
@@ -301,9 +301,9 @@ This is useful since clear() and resize() will not alter types.
 
     Examples:
 \code
-Json::Value null_value; // null
-Json::Value arr_value(Json::arrayValue); // []
-Json::Value obj_value(Json::objectValue); // {}
+dgJson::Value null_value; // null
+dgJson::Value arr_value(dgJson::arrayValue); // []
+dgJson::Value obj_value(dgJson::objectValue); // {}
 \endcode
   */
   Value(ValueType type = nullValue);
@@ -328,7 +328,7 @@ Json::Value obj_value(Json::objectValue); // {}
    * Example of usage:
    * \code
    * static StaticString foo("some text");
-   * Json::Value aValue(foo);
+   * dgJson::Value aValue(foo);
    * \endcode
    */
   Value(const StaticString& value);
@@ -497,7 +497,7 @@ Json::Value obj_value(Json::objectValue); // {}
    * the new entry is not duplicated.
    * Example of use:
    * \code
-   * Json::Value object;
+   * dgJson::Value object;
    * static const StaticString code("code");
    * object[code] = 1234;
    * \endcode
